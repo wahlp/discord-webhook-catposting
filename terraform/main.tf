@@ -18,6 +18,10 @@ provider "aws" {
 
 provider "archive" {}
 
+variable "lambda_function_name" {
+  default = "lambda_function"
+}
+
 data dotenv config {
   filename = "../.env"
 }
@@ -48,7 +52,7 @@ resource "aws_iam_role" "iam_for_lambda" {
 }
 
 resource "aws_lambda_function" "lambda" {
-  function_name = "lambda_function"
+  function_name = var.lambda_function_name
 
   filename         = "${data.archive_file.zip.output_path}"
   source_code_hash = "${data.archive_file.zip.output_base64sha256}"
@@ -81,4 +85,38 @@ resource "aws_lambda_permission" "allow_cloudwatch_to_call_check_foo" {
     function_name = aws_lambda_function.lambda.function_name
     principal = "events.amazonaws.com"
     source_arn = aws_cloudwatch_event_rule.lambda_trigger.arn
+}
+
+resource "aws_cloudwatch_log_group" "example" {
+  name              = "/aws/lambda/${var.lambda_function_name}"
+  retention_in_days = 14
+}
+
+# See also the following AWS managed policy: AWSLambdaBasicExecutionRole
+resource "aws_iam_policy" "lambda_logging" {
+  name        = "lambda_logging"
+  path        = "/"
+  description = "IAM policy for logging from a lambda"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "arn:aws:logs:*:*:*",
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_logs" {
+  role       = aws_iam_role.iam_for_lambda.name
+  policy_arn = aws_iam_policy.lambda_logging.arn
 }
