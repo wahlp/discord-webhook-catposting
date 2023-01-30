@@ -18,10 +18,6 @@ provider "aws" {
 
 provider "archive" {}
 
-variable "lambda_function_name" {
-  default = "lambda_function"
-}
-
 data dotenv config {
   filename = "../.env"
 }
@@ -32,6 +28,7 @@ data "archive_file" "zip" {
   output_path = "../lambda_function.zip"
 }
 
+# create iam role with perms
 data "aws_iam_policy_document" "policy" {
   statement {
     sid    = ""
@@ -51,6 +48,7 @@ resource "aws_iam_role" "iam_for_lambda" {
   assume_role_policy = "${data.aws_iam_policy_document.policy.json}"
 }
 
+# create lambda function
 resource "aws_lambda_function" "lambda" {
   function_name = var.lambda_function_name
 
@@ -68,6 +66,8 @@ resource "aws_lambda_function" "lambda" {
   }
 }
 
+# create cloudwatch event and set lambda as target
+# https://stackoverflow.com/questions/35895315/use-terraform-to-set-up-a-lambda-function-triggered-by-a-scheduled-event-source
 resource "aws_cloudwatch_event_rule" "lambda_trigger" {
   name = "lambda_trigger"
   schedule_expression = "rate(3 minutes)"
@@ -87,6 +87,7 @@ resource "aws_lambda_permission" "allow_cloudwatch_to_call_check_foo" {
     source_arn = aws_cloudwatch_event_rule.lambda_trigger.arn
 }
 
+# cloudwatch logs
 resource "aws_cloudwatch_log_group" "example" {
   name              = "/aws/lambda/${var.lambda_function_name}"
   retention_in_days = 14
