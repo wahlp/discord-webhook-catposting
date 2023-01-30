@@ -39,3 +39,22 @@ resource "aws_lambda_function" "lambda" {
   handler = "lambda_function.lambda_handler"
   runtime = "python3.9"
 }
+
+resource "aws_cloudwatch_event_rule" "lambda_trigger" {
+  name = "lambda_trigger"
+  schedule_expression = "rate(3 minutes)"
+}
+
+resource "aws_cloudwatch_event_target" "example" {
+  rule = aws_cloudwatch_event_rule.lambda_trigger.name
+  target_id = "lambda"
+  arn = aws_lambda_function.lambda.arn
+}
+
+resource "aws_lambda_permission" "allow_cloudwatch_to_call_check_foo" {
+    statement_id = "AllowExecutionFromCloudWatch"
+    action = "lambda:InvokeFunction"
+    function_name = aws_lambda_function.lambda.function_name
+    principal = "events.amazonaws.com"
+    source_arn = aws_cloudwatch_event_rule.lambda_trigger.arn
+}
