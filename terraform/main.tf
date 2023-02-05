@@ -1,8 +1,26 @@
+terraform {
+  required_providers {
+    # https://registry.terraform.io/providers/jrhouston/dotenv/latest/docs
+    dotenv = {
+      source = "jrhouston/dotenv"
+      version = "1.0.1"
+    }
+  }
+}
+
+provider "dotenv" {
+  # Configuration options
+}
+
 provider "aws" {
   region = "${var.aws_region}"
 }
 
 provider "archive" {}
+
+data dotenv config {
+  filename = "../.env"
+}
 
 data "archive_file" "zip" {
   type        = "zip"
@@ -38,6 +56,12 @@ resource "aws_lambda_function" "lambda" {
   role    = "${aws_iam_role.iam_for_lambda.arn}"
   handler = "lambda_function.lambda_handler"
   runtime = "python3.9"
+  
+  environment {
+    variables = {
+      WEBHOOK_URL = data.dotenv.config.env["WEBHOOK_URL"]
+    }
+  }
 }
 
 resource "aws_cloudwatch_event_rule" "lambda_trigger" {
