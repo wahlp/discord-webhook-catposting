@@ -70,7 +70,7 @@ resource "aws_lambda_function" "lambda" {
 # https://stackoverflow.com/questions/35895315/use-terraform-to-set-up-a-lambda-function-triggered-by-a-scheduled-event-source
 resource "aws_cloudwatch_event_rule" "lambda_trigger" {
   name = "lambda_trigger"
-  schedule_expression = "rate(3 minutes)"
+  schedule_expression = "cron(0 1 * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "example" {
