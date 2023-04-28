@@ -6,14 +6,52 @@ import urllib3
 http = urllib3.PoolManager()
 
 def lambda_handler(event, context):
-    s = f"Hello, your lucky number is {random.randint(0, 99)}"
-    send_webhook(s)
+    possible_search_terms = [
+        'cat',
+        'cat sleep',
+        'floppa',
+        'bingus',
+        'post this cat',
+        'cat jinx',
+        'cat when the',
+        'oh the misery',
+        'cat heres the',
+        'cat review',
+        'cat wrap',
+        'cat goober',
+        'cat sandwich'
+    ]
+    search_term = random.choice(possible_search_terms)
+
+    gif_urls = get(search_term)
+    chosen = random.choice(gif_urls)
+
+    send_webhook(chosen)
+
+def get(search_term, limit = 16):
+    apikey = os.getenv("TENOR_API_KEY")
+    if apikey is None:
+        raise Exception('API key is missing')
+    
+    client_key = "discord webhook daily post"
+
+    r = http.request("GET",
+        "https://tenor.googleapis.com/v2/search?q=%s&key=%s&client_key=%s&limit=%s"
+        % (search_term, apikey, client_key, limit))
+
+    if r.status != 200:
+        raise Exception(f'response returned status code {r.status_code}')
+    
+    top_8gifs = json.loads(r.data)
+    gif_urls = [x['itemurl'] for x in top_8gifs['results']]
+    return gif_urls
 
 def send_webhook(content: str):
     url = os.environ['WEBHOOK_URL']
     msg = {
-        "username": "Lucky Number Bot",
+        "username": "tfw no gf",
         "content": content,
+        "avatar_url": "https://cdn.discordapp.com/attachments/342727918679490561/1072240877021433856/image.png"
     }
 
     encoded_msg = json.dumps(msg).encode("utf-8")
@@ -27,4 +65,5 @@ def send_webhook(content: str):
     )
 
 if __name__ == '__main__':
-    send_webhook('testing locally')
+    # local testing
+    lambda_handler(None, None)
