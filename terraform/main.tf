@@ -62,6 +62,7 @@ resource "aws_lambda_function" "lambda" {
   environment {
     variables = {
       WEBHOOK_URL = data.dotenv.config.env["WEBHOOK_URL"]
+      TENOR_API_KEY = data.dotenv.config.env["TENOR_API_KEY"]
     }
   }
 }
