@@ -72,7 +72,7 @@ resource "aws_lambda_function" "lambda" {
 # https://stackoverflow.com/questions/35895315/use-terraform-to-set-up-a-lambda-function-triggered-by-a-scheduled-event-source
 resource "aws_cloudwatch_event_rule" "lambda_trigger" {
   name = "discord-webhook-post"
-  schedule_expression = "cron(0 4,16 * * ? *)"
+  schedule_expression = "cron(0 4 * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "example" {
