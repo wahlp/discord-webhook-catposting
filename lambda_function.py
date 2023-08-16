@@ -56,7 +56,7 @@ def get(search_term, limit = 16):
 def send_webhook(content: str):
     url = os.environ['WEBHOOK_URL']
     msg = {
-        "username": "tfw no gf",
+        "username": "cat gif of the day",
         "content": content,
         "avatar_url": "https://cdn.discordapp.com/attachments/342727918679490561/1072240877021433856/image.png"
     }
