@@ -49,8 +49,8 @@ def get(search_term, limit = 16):
     if r.status != 200:
         raise Exception(f'response returned status code {r.status_code}')
     
-    top_8gifs = json.loads(r.data)
-    gif_urls = [x['itemurl'] for x in top_8gifs['results']]
+    top_gifs = json.loads(r.data)
+    gif_urls = [x['itemurl'] for x in top_gifs['results']]
     return gif_urls
 
 def send_webhook(content: str):
