@@ -58,7 +58,7 @@ def send_webhook(content: str):
     msg = {
         "username": "cat gif of the day",
         "content": content,
-        "avatar_url": "https://cdn.discordapp.com/attachments/342727918679490561/1072240877021433856/image.png"
+        "avatar_url": "https://cdn.discordapp.com/attachments/1060873644689068073/1193306719393161267/cat.png"
     }
 
     encoded_msg = json.dumps(msg).encode("utf-8")
