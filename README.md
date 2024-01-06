@@ -1,2 +1,7 @@
-this terraform code deploys a AWS lambda function hooked up to a cloudwatch event schedule.
-the lambda posts a random cat gif from tenor to a discord webhook.
+uses aws lambda to find a random cat gif from tenor and post it to a discord webhook
+
+# deploy
+```
+cd terraform
+terraform apply
+```
