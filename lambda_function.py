@@ -23,10 +23,14 @@ def lambda_handler(event, context):
         'this cat is',
         'cat facetime',
         'cat dead chat',
-        'ok i pull up',
+        'vro',
         'cat insane',
         'cat stare',
-        'cat boing'
+        'cat boing',
+        'cat silly',
+        'cat oye',
+        'cat apple',
+        'cat panko',
     ]
     search_term = random.choice(possible_search_terms)
 
