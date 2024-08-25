@@ -5,6 +5,7 @@ import urllib3
 
 http = urllib3.PoolManager()
 
+
 def lambda_handler(event, context):
     possible_search_terms = [
         'cat',
@@ -39,23 +40,26 @@ def lambda_handler(event, context):
 
     send_webhook(chosen)
 
-def get(search_term, limit = 16):
+
+def get(search_term, limit=16):
     apikey = os.getenv("TENOR_API_KEY")
     if apikey is None:
         raise Exception('API key is missing')
-    
+
     client_key = "discord webhook daily post"
 
-    r = http.request("GET",
+    r = http.request(
+        "GET",
         "https://tenor.googleapis.com/v2/search?q=%s&key=%s&client_key=%s&limit=%s"
         % (search_term, apikey, client_key, limit))
 
     if r.status != 200:
         raise Exception(f'response returned status code {r.status_code}')
-    
+
     top_gifs = json.loads(r.data)
     gif_urls = [x['itemurl'] for x in top_gifs['results']]
     return gif_urls
+
 
 def send_webhook(content: str):
     url = os.environ['WEBHOOK_URL']
@@ -74,6 +78,7 @@ def send_webhook(content: str):
             "response": resp.data,
         }
     )
+
 
 if __name__ == '__main__':
     # local testing
