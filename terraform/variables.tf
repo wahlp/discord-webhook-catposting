@@ -6,3 +6,8 @@ variable "aws_region" {
 variable "lambda_function_name" {
   default = "goofyahh-cat-webhook"
 }
+
+// load environment variables
+locals {
+  env = { for tuple in regexall("(.*)=(.*)", file("../.env")) : tuple[0] => sensitive(tuple[1]) }
+}

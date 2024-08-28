@@ -1,26 +1,8 @@
-terraform {
-  required_providers {
-    # https://registry.terraform.io/providers/jrhouston/dotenv/latest/docs
-    dotenv = {
-      source = "jrhouston/dotenv"
-      version = "1.0.1"
-    }
-  }
-}
-
-provider "dotenv" {
-  # Configuration options
-}
-
 provider "aws" {
   region = "${var.aws_region}"
 }
 
 provider "archive" {}
-
-data dotenv config {
-  filename = "../.env"
-}
 
 data "archive_file" "zip" {
   type        = "zip"
@@ -62,8 +44,8 @@ resource "aws_lambda_function" "lambda" {
   
   environment {
     variables = {
-      WEBHOOK_URL = data.dotenv.config.env["WEBHOOK_URL"]
-      TENOR_API_KEY = data.dotenv.config.env["TENOR_API_KEY"]
+      WEBHOOK_URL = local.env["WEBHOOK_URL"]
+      TENOR_API_KEY = local.env["TENOR_API_KEY"]
     }
   }
 }
