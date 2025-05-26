@@ -15,7 +15,7 @@ def lambda_handler(event, context):
         'post this cat',
         'cat jinx',
         'cat when the',
-        'oh the misery',
+        'cat oh the misery',
         'cat heres the',
         'cat review',
         'cat wrap',
@@ -29,7 +29,7 @@ def lambda_handler(event, context):
         'cat stare',
         'cat boing',
         'cat silly',
-        'cat oye',
+        'cat oye doudou',
         'cat apple',
         'cat panko',
     ]
