@@ -1,4 +1,4 @@
-uses aws lambda to find a random cat gif from tenor and post it to a discord webhook
+uses aws lambda to find a random cat gif from klipy and post it to a discord webhook
 
 # deploy
 ```

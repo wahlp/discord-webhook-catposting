@@ -42,7 +42,7 @@ def lambda_handler(event, context):
 
 
 def get(search_term, limit=16):
-    apikey = os.getenv("TENOR_API_KEY")
+    apikey = os.getenv("KLIPY_API_KEY")
     if apikey is None:
         raise Exception('API key is missing')
 
@@ -50,7 +50,7 @@ def get(search_term, limit=16):
 
     r = http.request(
         "GET",
-        "https://tenor.googleapis.com/v2/search?q=%s&key=%s&client_key=%s&limit=%s"
+        "https://api.klipy.com/v2/search?q=%s&key=%s&client_key=%s&limit=%s"
         % (search_term, apikey, client_key, limit))
 
     if r.status != 200:
